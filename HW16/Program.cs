@@ -15,7 +15,6 @@ namespace HW16
             var product = repository.GetProduct("Товар 1");
             var productCount = repository.GetProductCount();
 
-
             if (order is not null) Console.WriteLine($"Заказ: {order.Id}, {order.CustomerId}, {order.ProductId}, {order.Quantity}");
             Console.WriteLine($"Всего заказов: {orderCount}");
             if (сustomer is not null) Console.WriteLine($"Покупатель: {сustomer.Id}, {сustomer.FirstName}, {сustomer.LastName}, {сustomer.Age}");
@@ -23,10 +22,7 @@ namespace HW16
             if (product is not null) Console.WriteLine($"Товар: {product.Id}, {product.Name}, {product.Description}, {product.Stockquantity}, {product.Price}");
             Console.WriteLine($"Всего товаров: {productCount}");
 
-
-
-             var result = repository.QuaryFromHW15(1, 30);
-
+            var result = repository.QuaryFromHW15(1, 30);
 
             foreach (var res in result)
             {
