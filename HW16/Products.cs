@@ -13,14 +13,5 @@ namespace HW16
         public string? Description { get; set; }
         public int Stockquantity { get; set; }
         public int Price { get; set; }
-
-        //public Product(int id, string name, string description, int stockquantity, int price)
-        //{
-        //    Id = id;
-        //    Name = name;
-        //    Description = description;
-        //    Stockquantity = stockquantity;
-        //    Price = price;
-        //}
     }
 }

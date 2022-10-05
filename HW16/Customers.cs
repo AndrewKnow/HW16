@@ -12,17 +12,5 @@ namespace HW16
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public int Age { get; set; }
-
-
-        //public IEnumerable<Order> Order { get; set; }
-        //public IEnumerable<Product> Product { get; set; }
-
-        //public Customer(int id, string firstName, string lastName, int age)
-        //{
-        //    Id = id;
-        //    FirstName = firstName;
-        //    LastName = lastName;
-        //    Age = age;
-        //}
     }
 }

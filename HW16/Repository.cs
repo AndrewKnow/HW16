@@ -64,71 +64,49 @@ namespace HW16
             connection.Close();
             return s;
         }
-        public IEnumerable<Order> QuaryFromHW15(int idc, int age)
+        public IEnumerable<Order> QuaryFromHW15(int id, int age)
         {
 
-            //var query = @"SELECT o.customerid as custometId, c.firstname, c.lastname " +
-            //    @", o.productid as productId, o.quantity, p.price " +
-            //    "FROM Orders o LEFT JOIN Customers c ON c.id = o.customerid LEFT JOIN Products p ON p.id = o.productid " +
-            //    "WHERE p.id = @id AND c.age > @age ;";
-
-            //var query = @"SELECT o.id as Id, o.customerid as Idc, c.firstname, c.lastname, o.productid as Idb, o.quantity, p.price " +
-            //    "FROM Orders o LEFT JOIN Customers c ON o.customerid = c.id   LEFT JOIN Products p ON p.id = o.productid " +
-            //    "WHERE p.id = @id AND c.age > @age ;";
-
-            var query = @"SELECT c.id Id, c.id customerid,  c.firstname, c.lastname, o.productid IdP, o.quantity, p.price " +
-                "FROM Orders o INNER JOIN Customers c ON o.customerid = c.id  INNER JOIN Products p ON p.id = o.productid " +
+            var query = @"SELECT o.*, o.customerid as Id, c.firstname, c.lastname, o.productid as Id, o.quantity, p.price, p.Name " +
+                "FROM Orders o JOIN Products p ON p.id = o.productid JOIN Customers c ON c.id = o.customerid " +
                 "WHERE p.id = @id AND c.age > @age ;";
-            //var query = @"SELECT c.id , o.customerid as Id, c.firstname, c.lastname, o.productid as ProductId, o.quantity, p.price " +
-            //    "FROM Customers c LEFT JOIN Orders o ON o.customerid = c.id JOIN Products p ON p.id = o.productid " +
-            //    "WHERE p.id = @id AND c.age > @age ;";
 
             var connString = DBConnection.ConnectionString();
             using (var connection = new NpgsqlConnection(connString))
             {
-                //var orderRes = connection.Query<Order, Customer, Product, Order>(query,
-                //    (o, c, p) =>
-                //    {
-                //        o.Products = new List<Product>();
-                //        o.Customers = new List<Customer>();
-
-
-                //        if (c != null)
-                //        {
-                //            o.Customers.ToList().Add(c);
-                //        }
-
-                //        if (p != null)
-                //        {
-                //            o.Products.ToList().Add(p);
-                //        }
-
-                //        return o;
-                //    }, new { @id = idc, @age = age },
-                //    splitOn: "customerid,IdP");
-
                 var lookup = new Dictionary<int, Order>();
-                connection.Query<Order, Customer, Product, Order>(query, (o, c, p) => {
-                        Order order;
-                        if (!lookup.TryGetValue(o.Id, out order))
-                        {
-                            lookup.Add(o.Id, order = o);
-                        }
-                        if (order.Products == null)
-                            order.Products = new List<Product>();
+                var lookup2 = new Dictionary<int, Customer>();
+                _ = connection.Query<Order, Customer, Product, Order >(query, (o, c, p) =>
+                {
+                    Order order;
+                    if (!lookup.TryGetValue(o.Id, out order))
+                    {
+                        lookup.Add(o.Id, order = o);
+                    }
 
-                        if (order.Customers == null)
-                            order.Customers = new List<Customer>();
+                    Customer customer;
+                    if (order.Customers == null)
+                        order.Customers = new List<Customer>();
+                    if (!lookup2.TryGetValue(c.Id, out customer))
+                    {
+                        lookup2.Add(c.Id, customer = c);
+                        order.Customers.Add(customer);
+                    }
 
-                        order.Products.Add(p);
-                        order.Customers.Add(c);
+                    Product product;
+
+                    if (order.Products == null)
+                        order.Products = new List<Product>();
+
+                    order.Products.Add(p);
+
                     return order;
-                    }, new { @id = idc, @age = age }, splitOn: "customerid,IdP"
+                }, new { @id = id, @age = age }, splitOn: "Id"
                  ).AsQueryable();
                 var resultList = lookup.Values;
 
                 connection.Close();
-                return resultList;//orderRes;
+                return resultList;
 
                 
             }

@@ -14,7 +14,7 @@ namespace HW16
         private static readonly string _port = "5432";
         public static string ConnectionString()
         {
-            string password = "Dynamo1923";
+            string password = "*****";
             string connString = string.Format
             (
               "Server={0};Username={1};Database={2};Port={3};Password={4};SSLMode=Prefer",
@@ -26,6 +26,5 @@ namespace HW16
 
             return connString;
         }
-
     }
 }
